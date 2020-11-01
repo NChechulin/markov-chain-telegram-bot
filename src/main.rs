@@ -1,12 +1,30 @@
-extern crate markov;
+use std::env;
 
-use markov::Chain;
-use std::process;
+use futures::StreamExt;
+use telegram_bot::*;
 
-fn main() {
-    let mut chain = Chain::of_order(1);
-    //     for line in chain.iter_for(50) {
-    //         let sentence: String = line.into_iter().map(|word| word + " ").collect();
-    //         println!("{:?}", sentence);
-    //     }
+#[tokio::main]
+async fn main() -> Result<(), Error> {
+    let api = Api::new("");
+
+    // Fetch new updates via long poll method
+    let mut stream = api.stream();
+    while let Some(update) = stream.next().await {
+        // If the received update contains a new message...
+        let update = update?;
+        if let UpdateKind::Message(message) = update.kind {
+            if let MessageKind::Text { ref data, .. } = message.kind {
+                // Print received text message to stdout.
+                println!("<{}>: {}", &message.from.first_name, data);
+
+                // Answer message with "Hi".
+                api.send(message.text_reply(format!(
+                    "Hi, {}! You just wrote '{}'",
+                    &message.from.first_name, data
+                )))
+                .await?;
+            }
+        }
+    }
+    Ok(())
 }
