@@ -1,3 +1,5 @@
+use std::process;
+
 use markov::Chain;
 
 use futures::StreamExt;
@@ -7,11 +9,16 @@ use telegram_bot::*;
 async fn main() -> Result<(), Error> {
     let api = Api::new("");
     let mut chain: Chain<String> = Chain::of_order(1);
+    
     println!("Starting to feed the file...");
-    chain.feed_file("feed_files/blog_posts_en.txt");
-    println!("File feeded, bot is ready to work.");
+
+    match chain.feed_file("feed_files/blog_posts_en.txt") {
+        Ok(_) => println!("File feeded, bot is starting..."),
+        Err(_) => process::exit(1),
+    }
 
     let mut stream = api.stream();
+    
     while let Some(update) = stream.next().await {
         let update = update?;
         if let UpdateKind::Message(message) = update.kind {
