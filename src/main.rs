@@ -1,3 +1,4 @@
+use std::fs;
 use std::process;
 
 use markov::Chain;
@@ -9,16 +10,19 @@ use telegram_bot::*;
 async fn main() -> Result<(), Error> {
     let api = Api::new("");
     let mut chain: Chain<String> = Chain::of_order(1);
-    
-    println!("Starting to feed the file...");
+    println!("Starting to feed the files...");
 
-    match chain.feed_file("feed_files/blog_posts_en.txt") {
-        Ok(_) => println!("File feeded, bot is starting..."),
-        Err(_) => process::exit(1),
+    for file in fs::read_dir("./feed_files").unwrap() {
+        let path = file.unwrap().path();
+        match chain.feed_file(&path) {
+            Ok(_) => println!("File {}, loaded", &path.display()),
+            Err(_) => process::exit(1),
+        }
     }
 
+    println!("All files feeded, bot is starting...");
+
     let mut stream = api.stream();
-    
     while let Some(update) = stream.next().await {
         let update = update?;
         if let UpdateKind::Message(message) = update.kind {
