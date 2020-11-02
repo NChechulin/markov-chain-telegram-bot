@@ -6,7 +6,7 @@ I also used [Blog Authorship Corpus](https://www.kaggle.com/rtatman/blog-authors
 ## Setup and run
 
 1. Ensure that you have rust and `cargo` installed
-2. Clone the repo: 'https://github.com/NChechulin/markov-chain-telegram-bot.git'
+2. Clone the repo: `git clone https://github.com/NChechulin/markov-chain-telegram-bot.git`
 3. Register new bot and insert it's token in `src/main.rs:26`.
 4. Run `cargo run`
 
