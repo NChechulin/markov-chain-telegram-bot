@@ -6,9 +6,8 @@ use markov::Chain;
 use futures::StreamExt;
 use telegram_bot::*;
 
-#[tokio::main]
-async fn main() -> Result<(), Error> {
-    let api = Api::new("");
+
+fn set_chain() -> Chain::<String> {
     let mut chain: Chain<String> = Chain::of_order(1);
     println!("Starting to feed the files...");
 
@@ -19,6 +18,13 @@ async fn main() -> Result<(), Error> {
             Err(_) => process::exit(1),
         }
     }
+    chain
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Error> {
+    let api = Api::new("");
+    let mut chain = set_chain();
 
     println!("All files feeded, bot is starting...");
 
