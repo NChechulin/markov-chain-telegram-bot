@@ -7,6 +7,9 @@ use telegram_bot::*;
 async fn main() -> Result<(), Error> {
     let api = Api::new("");
     let mut chain: Chain<String> = Chain::of_order(1);
+    println!("Starting to feed the file...");
+    chain.feed_file("feed_files/blog_posts_en.txt");
+    println!("File feeded, bot is ready to work.");
 
     let mut stream = api.stream();
     while let Some(update) = stream.next().await {
@@ -19,7 +22,7 @@ async fn main() -> Result<(), Error> {
                 let mut response = chain.generate_str_from_token(data);
                 if response.len() == 0 {
                     response = chain.generate_str();
-                } 
+                }
 
                 // Print received text message to stdout.
                 println!("{} -> {}", data, response);
