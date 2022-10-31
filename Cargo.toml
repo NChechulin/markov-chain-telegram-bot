@@ -11,7 +11,7 @@ markov = "1.1.0"
 
 futures = "0.3.25"
 telegram-bot = "0.7.0"
-teloxide = "0.3"
+teloxide = "0.11"
 teloxide-macros = "0.3"
 
 log = "0.4.8"
