@@ -9,7 +9,7 @@ edition = "2018"
 [dependencies]
 markov = "1.1.0"
 
-futures = "0.3.7"
+futures = "0.3.25"
 telegram-bot = "0.7.0"
 teloxide = "0.3"
 teloxide-macros = "0.3"
